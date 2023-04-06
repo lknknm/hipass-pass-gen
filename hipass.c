@@ -12,9 +12,9 @@ int main(int argc, char **argv)
 
     int characters = 0;
     do {
-    printf("Type in number of characters (between 14 and 128): ");
+    printf("Type in number of characters (between 14 and 256): ");
     scanf("%i", &characters);
-    } while (characters < 14 || characters > 128);
+    } while (characters < 14 || characters > 256);
 
     char *password = malloc(sizeof(characters));
     if (password == NULL)
@@ -28,7 +28,6 @@ int main(int argc, char **argv)
     printf("Password: ");
 
     generate_random_complete(password, characters);
-
 
     char clipCopy;
     printf("\033[0;37m"); // White text value
