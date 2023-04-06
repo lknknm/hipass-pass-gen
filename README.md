@@ -1,4 +1,4 @@
-### Hipass Password Generator
+## Hipass Password Generator
 
 Hipass is a CLI (Command Line Interface) Password Generator that generates random, strong passwords. 
 The intent of the project is to generate passwords in a fast, concise way and copy them directly into the clipboard, without having 
@@ -28,3 +28,29 @@ You can use offline or online solutions for that. My top 3 recommendations are:
 <a href="https://bitwarden.com/">BitWarden</a>, <a href="https://usa.kaspersky.com/about/company">Kaspersky</a> and <a href="https://www.lastpass.com/pt">LastPass</a>. 
 Of course they also offer robust password generators, but if you want an offline, fast solution, you can recursively use 
 <a href="https://github.com/lknknm/hipass-pass-gen">Hipass</a>.
+
+#### Usage (to be implemented)
+```
+  ./hipass [--flag] [-f]
+```
+
+```
+  *no flags*        User will be prompted to choose character length of a random password with 
+                    A-Z uppercase, a-z lowercase, numbers and special characters
+  
+  -h --help         Print out help text
+  -v --version      Print version
+  --update          Update to latest release
+  
+  --random          Generate random password including the following flags
+       -AZ             Include A to Z uppercase characters
+       -az             Include a to z lowercase characters
+       -!#             Include special symbols
+      -num             Include numbers
+       
+  --prefix PREFIX   Generate password with a desired prefix
+  --sufix SUFIX     Generate password with a desired sufix
+       
+  --passphrase      Generate passphrase with the following flags
+         -sep%      Separate words with "%"
+```
