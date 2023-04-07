@@ -3,8 +3,8 @@
 #include <time.h>
 #include <string.h>
 
-#include "lib/generator.h"
-#include "lib/clipboard.h"
+#include "generator.h"
+#include "clipboard.h"
 
 int main(int argc, char **argv)
 {
