@@ -29,6 +29,29 @@ You can use offline or online solutions for that. My top 3 recommendations are:
 Of course they also offer robust password generators, but if you want an offline, fast solution, you can recursively use 
 <a href="https://github.com/lknknm/hipass-pass-gen">Hipass</a>.
 
+### How to build Hipass
+Hipass is available to build on Linux Ubuntu or using Windows Subsystem for Linux (WSL).
+#### Download the Source
+```
+sudo wget https://github.com/lknknm/hipass-pass-gen/archive/refs/heads/main.zip
+unzip hipass-pass-gen-main.zip
+rm hipass-pass-gen-main.zip
+cd hipass-pass-gen-main
+```
+#### Compile the code using Makefile
+Hipass uses a Makefile to compile the code. The following commands can be executed from the root directory.
+```
+make          # Build Hipass
+make all      # Build Hipass with all object files
+make clean    # Clean ./build directory
+make test     # Build and run test
+```
+By default the Makefile will output object files and binary into the `~/build` folder. You can then run the program from there:
+```
+cd ~/build
+./hipass
+```
+
 #### Usage (to be implemented)
 ```
   ./hipass [--flag] [-f]
