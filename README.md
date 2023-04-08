@@ -51,7 +51,7 @@ By default the Makefile will output object files and binary into the `~/build` f
 cd ~/build
 ./hipass
 ```
-Additionally, if you are on Linux, you may need to install xclip to get the password copied into the clipboard
+Additionally, if you are on Linux, you may need to install xclip to get the password copied into the clipboard, if you haven't yet.
 ```
 sudo apt-get -y install xclip
 ```
