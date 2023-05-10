@@ -74,6 +74,7 @@ Example: ./hipass AZ num sym az
   num               Include digits from 0 to 9
 
 The following arguments can be passed as flags:  
+
   --h --help        Print out help text
   --v --version     Print version
   --update          Update to latest release
