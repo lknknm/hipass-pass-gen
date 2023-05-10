@@ -58,22 +58,25 @@ sudo apt-get -y install xclip
 
 #### Usage (to be implemented)
 ```
-  ./hipass [--flag] [-f]
+  ./hipass [--flag] [f]
 ```
 
 ```
   *no flags*        User will be prompted to choose character length of a random password with 
                     A-Z uppercase, a-z lowercase, numbers and special characters
-  
-  -h --help         Print out help text
-  -v --version      Print version
+
+The following arguments will generate passwords with the ones user had selected.
+Example: ./hipass AZ num sym az
+
+  AZ                Include A to Z uppercase characters
+  az                Include a to z lowercase characters
+  sym               Include special symbols (!@#^&*$)
+  num               Include digits from 0 to 9
+
+The following arguments can be passed as flags:  
+  --h --help        Print out help text
+  --v --version     Print version
   --update          Update to latest release
-  
-  --random          Generate random password including the following flags
-       -AZ             Include A to Z uppercase characters
-       -az             Include a to z lowercase characters
-       -!#             Include special symbols
-      -num             Include numbers
        
   --prefix PREFIX   Generate password with a desired prefix
   --sufix SUFIX     Generate password with a desired sufix
