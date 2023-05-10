@@ -22,8 +22,8 @@
 
 int copy_to_clipboard(const char *str)
 {
-    const char *proto_cmd = "echo '%s' | xclip -sel clipboard";
-    //const char *proto_cmd = "echo '%s' | clip.exe"; // Windows Subsystem for Linux
+    //const char *proto_cmd = "echo '%s' | xclip -sel clipboard";
+    const char *proto_cmd = "echo '%s' | clip.exe"; // Windows Subsystem for Linux
 
     char cmd[strlen(str) + strlen(proto_cmd) - 1];
     sprintf(cmd, proto_cmd, str);
@@ -48,9 +48,9 @@ void copy_to_clipboard_prompt(const char *str)
         {
             break;
         }
-    } while (clipPrompt != 'y' || clipPrompt != 'n' || clipPrompt == '\n');
+    } while (clipPrompt != 'y' || clipPrompt != 'n');
 
-    
+    // Clear input buffer:
     while ((getchar()) != '\n' && (getchar()) != EOF);
     return;
 }
