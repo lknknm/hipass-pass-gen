@@ -49,16 +49,6 @@ bool CH_TYPE[4] = { 0, 0, 0, 0 };
 
 int main(int argc, char **argv)
 {
-    // CH_TYPES[0].name = "AZ_upper";
-    // CH_TYPES[1].name = "AZ_lower";
-    // CH_TYPES[2].name = "numeric";
-    // CH_TYPES[3].name = "symbol";
-    
-    // CH_TYPES[0].selected = false;
-    // CH_TYPES[1].selected = false;
-    // CH_TYPES[2].selected = false;
-    // CH_TYPES[3].selected = false;
-
     int c;
     int digit_optind = 0;
 
