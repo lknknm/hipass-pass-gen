@@ -41,14 +41,23 @@
 #define C_BWHITE "\e[47m"
 
 
-// variables declaration to parse command line into the generator algorithm
-bool AZ_upper = false;
-bool az_lower = false;
-bool numeric = false;
-bool symbol = false;
+/**
+ * boolean declaration to parse command line into the generator algorithm
+ * numeric digits, az-lowercase, AZ-uppercase, symbols;
+ */
+bool CH_TYPE[4] = { 0, 0, 0, 0 };
 
 int main(int argc, char **argv)
 {
+    // CH_TYPES[0].name = "AZ_upper";
+    // CH_TYPES[1].name = "AZ_lower";
+    // CH_TYPES[2].name = "numeric";
+    // CH_TYPES[3].name = "symbol";
+    
+    // CH_TYPES[0].selected = false;
+    // CH_TYPES[1].selected = false;
+    // CH_TYPES[2].selected = false;
+    // CH_TYPES[3].selected = false;
 
     int c;
     int digit_optind = 0;
@@ -185,33 +194,30 @@ int main(int argc, char **argv)
     /*  The following should check the command line arguments to generate a
      *  random password using different inputs as described by README.md
      *
-     *  AZ to add A-Z uppercase letters;
-     *  az to add a-z lowercase letters;
      *  num to add numeric 0-9 characters;
+     *  az to add a-z lowercase letters;
+     *  AZ to add A-Z uppercase letters;
      *  sym to add symbol (!@#^&*$) characters;
      *  Arguments can be input in any order. 
      */
 
     for (int i = 1; i < argc; i++)
     {
-        if (strncmp("AZ", argv[i], 2) == 0) {
-            printf("option AZ\n");
-            AZ_upper = true;
-        }
-
-        if (strncmp("az", argv[i], 2) == 0) {
-            printf("option az_lower\n");
-            az_lower = true;
-        }
-
         if (strncmp("num", argv[i], 3) == 0) {
             printf("option num\n");
-            numeric = true;
+            CH_TYPE[0] = true;
         }
-
-        if (strncmp("sym", argv[i], 2) == 0) {
+        else if (strncmp("az", argv[i], 2) == 0) {
+            printf("option az_lower\n");
+            CH_TYPE[1] = true;
+        }
+        else if (strncmp("AZ", argv[i], 2) == 0) {
+            printf("option AZ\n");
+            CH_TYPE[2] = true;
+        }
+        else if (strncmp("sym", argv[i], 2) == 0) {
             printf("option !#_symbols\n");
-            symbol = true;
+            CH_TYPE[3] = true;
         }
     }
 
@@ -236,10 +242,8 @@ int main(int argc, char **argv)
     }
 
     printf(C_GREEN "Password: ");
-    generate_random_CLI(AZ_upper, 
-                        az_lower, 
-                        numeric,
-                        symbol,
+    generate_random_CLI(
+                        CH_TYPE,
                         password, 
                         characters);
 
