@@ -4,6 +4,9 @@ Hipass is a CLI (Command Line Interface) Password Generator that generates rando
 The intent of the project is to generate passwords in a fast, concise way and copy them directly into the clipboard, without having 
 to rely on internet services.
 
+| CS50x Final Project. This is still under development.  |
+|--------------------------------------------------------|
+
 #### Why use a password generator?
 Passwords must be strong and unique to each service you're using. This way, attackers will have a harder time guessing your passwords, or even 
 <a href="https://www.fortinet.com/resources/cyberglossary/brute-force-attack">"brute forcing"</a> 
@@ -85,3 +88,19 @@ The following arguments can be passed as flags:
   --passphrase      Generate passphrase with the following flags
          -sep%      Separate words with "%"
 ```
+
+#### Generating random characters
+Generating random characters and random numbers based on a seed of time such as `srand(time(NULL))` and `rand()` may lead to several password exploits. A simple example of this is that seeding a `random` generator with `time(NULL)` and calling `generate_password` twice in `main()` will generate the same password twice. This means that seeding with `time(NULL)` will not generate milisecond time and will not use any kernel processes of the user's computer (adding solely GETPID in the equation won't help much either). 
+
+For this reason, this password generator is using [this set of functions written](https://github.com/jleffler/soq/tree/6118083dc6af1daa0a0f0f54d6414f2f6c0e9049/src/so-7594-6155) by [Jonathan Leffler](https://github.com/jleffler). His random seed generation uses the widespread `/dev/random` and `/dev/urandom` devices as a [cryptographically secure pseudorandom number generator](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator).
+
+>"The random seed code generation code in `randseed.c` and `randseed.h` uses `/dev/random` by default but can be configured to use a number of other algorithms. The files `crc.c` and `crc.h` contain some CRC algorithms if your system has neither `/dev/random` (nor `/dev/urandom`) nor `arc4random()`.
+>
+>The random number generation code using POSIX nrand48() is in prng48.c and prng48.h. You should call prng48_seed() with an array of 3 unsigned short integers that represent the random seed - though there is a default value. You then call prng48_rand() with the lower and upper bounds of the range of 31-bit unsigned integers that you want. The algorithm takes care to ensure that there is no bias in the result.
+>
+>The files kludge.c, kludge.h, posixver.h, stderr.c, and stderr.h can be found in the src/libsoq sub-directory. They are needed for the FEATURE macro used in randseed.c and testing, etc."
+
+>Leffler, Jonathan, Stack Overflow Question 75494-6155, (2023), GitHub repository, https://github.com/jleffler/soq/tree/6118083dc6af1daa0a0f0f54d6414f2f6c0e9049/src/so-7594-6155
+
+#### License
+This project uses GNU GENERAL PUBLIC LICENSE 3.0.
