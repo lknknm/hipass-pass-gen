@@ -19,6 +19,7 @@
 #include <stdbool.h>
 
 #include "generator.h"
+#include "clipboard.h"
 
 #include "posixver.h"
 #include <assert.h>
@@ -50,16 +51,33 @@ static const enum len {
     NUM_SYMBOLS = sizeof(symbols) - 1
 } types;
 
-extern void generate_random_complete(char *password, int characters)
+extern int generate_random_complete(void)
 {
     unsigned short seed[3];
     random_seed_bytes(sizeof(seed), seed);
     prng48_seed(seed);
 
-    // printf("sizeof types %li\n", sizeof(types));
-    // printf("num upper %i\n", NUM_UPPERCASE);
-    // printf("num symbols %i\n", NUM_SYMBOLS);
+    printf(C_WHITE "Hipass Password Generator\n\n" C_RESET);    
 
+    int characters = 0;
+    do {
+        printf("Type in number of characters (between 14 and 256): ");
+        scanf("%i", &characters);
+
+        // Clear input buffer:
+        while ((getchar()) != '\n' && (getchar()) != EOF);
+    } while (characters < 14 || characters > 256);
+
+    // Allocate memory as the number of characters * chars
+    char *password = malloc(characters*sizeof(char));
+    if (password == NULL)
+    {
+        printf("Could not allocate memory for password.\n");
+        free(password); // Just being "super safe"
+        return 1;
+    }
+
+    printf(C_GREEN "Password: ");
     for (int i = 0; i < characters; i++)
     {
         // sizeof(types) will return the size of an int, which is 4 bytes.
@@ -83,8 +101,12 @@ extern void generate_random_complete(char *password, int characters)
             printf(C_RED "%c", password[i]);
         }
     }
+    
     printf("\n");
-    return;
+    copy_to_clipboard_prompt(password);
+    printf("\n");
+    free(password);
+    return 0;
 }
 
 int generate_type(bool CH_TYPE[])
@@ -103,13 +125,31 @@ int generate_type(bool CH_TYPE[])
     return char_type;
 }
 
-extern void generate_random_CLI(bool CH_TYPE[],
-                                char *password, 
-                                int characters)
+extern int generate_random_CLI(bool CH_TYPE[])
 {
     unsigned short seed[3];
     random_seed_bytes(sizeof(seed), seed);
     prng48_seed(seed);
+
+    printf(C_WHITE "Hipass Password Generator\n\n" C_RESET);    
+    int characters = 0;
+    do {
+        printf("Type in number of characters (between 14 and 256): ");
+        scanf("%i", &characters);
+
+        // Clear input buffer:
+        while ((getchar()) != '\n' && (getchar()) != EOF);
+    } while (characters < 14 || characters > 256);
+
+    // Allocate memory as the number of characters * chars
+    char *password = malloc(characters*sizeof(char));
+    if (password == NULL)
+    {
+        printf("Could not allocate memory for password.\n");
+        free(password); // Just being "super safe"
+        return 1;
+    }
+    printf(C_GREEN "Password: ");
 
     for (int i = 0; i < characters; i++)
     {
@@ -134,5 +174,14 @@ extern void generate_random_CLI(bool CH_TYPE[],
         }
     }
     printf("\n");
-    return;
+    copy_to_clipboard_prompt(password);
+    printf("\n");
+    free(password);
+
+    return 0;
+}
+
+extern void generate_passphrase(void)
+{
+    printf("hello world!\n");
 }

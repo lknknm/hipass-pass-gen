@@ -57,10 +57,11 @@ int main(int argc, char **argv)
         int this_option_optind = optind ? optind : 1;
         int option_index = 0;
         static struct option long_options[] = {
-            {"help",    no_argument,        0,  'h' },
-            {"version", no_argument,        0,  'v' },
-            {"random",  required_argument,  0,  'r' },
-            {0,         0,                  0,  0   }
+            {"help",        no_argument,            0,  'h' },
+            {"version",     no_argument,            0,  'v' },
+            {"random",      required_argument,      0,  'r' },
+            {"passphrase",  no_argument,            0,  'p' },
+            {0,         0,                          0,   0  }
         };
 
         c = getopt_long(argc, argv, "abc:d:012",
@@ -83,15 +84,17 @@ int main(int argc, char **argv)
                         printf("*no flags           User will be prompted to choose character length\n");
                         printf("                    of a random password with A-Z uppercase, a-z lowercase, numbers and special characters\n");
                         printf("\n");
+                        printf("The following arguments will generate passwords with the ones user had selected.\n");
+                        printf("Example: ./hipass AZ num sym az\n");
+                        printf("\n");
+                        printf("    AZ               Include A to Z uppercase characters\n");
+                        printf("    az               Include a to z lowercase characters\n");
+                        printf("    sym              Include special symbols\n");
+                        printf("    num              Include digits from 0 to 9\n");
+                        printf("\n");
                         printf(" -h --help          Print out help text\n");
                         printf(" -v --version       Print version\n");
                         printf(" --update           Update to latest release\n");
-                        printf("\n");
-                        printf(" --random           Generate random password including the following flags\n");
-                        printf("     --AZ               Include A to Z uppercase characters\n");
-                        printf("     --az               Include a to z lowercase characters\n");
-                        printf("    --sym               Include special symbols\n");
-                        printf("    --num               Include digits from 0 to 9\n");
                         printf("\n");
                         printf(" --prefix PREFIX    Generate password with a desired prefix\n");
                         printf(" --sufix SUFIX      Generate password with a desired sufix\n");
@@ -133,6 +136,10 @@ int main(int argc, char **argv)
                         free(password);
                         break;
 
+            case 'p':   
+                        generate_passphrase();
+                        return;
+
             case '0':
             case '1':
             case '2':
@@ -153,31 +160,7 @@ int main(int argc, char **argv)
 
     if (argc == 1) 
     {
-        printf(C_WHITE "Hipass Password Generator\n\n" C_RESET);    
-
-        int characters = 0;
-        do {
-            printf("Type in number of characters (between 14 and 256): ");
-            scanf("%i", &characters);
-
-            // Clear input buffer:
-            while ((getchar()) != '\n' && (getchar()) != EOF);
-        } while (characters < 14 || characters > 256);
-
-        // Allocate memory as the number of characters * chars
-        char *password = malloc(characters*sizeof(char));
-        if (password == NULL)
-        {
-            printf("Could not allocate memory for password.\n");
-            free(password); // Just being "super safe"
-            return 1;
-        }
-
-        printf(C_GREEN "Password: ");
-        generate_random_complete(password, characters);
-        copy_to_clipboard_prompt(password);
-        printf("\n");
-        free(password);
+        generate_random_complete();
         return 0;
     }
 
@@ -210,37 +193,7 @@ int main(int argc, char **argv)
             CH_TYPE[3] = true;
         }
     }
-
-    printf(C_WHITE "Hipass Password Generator\n\n" C_RESET);    
-
-    int characters = 0;
-    do {
-        printf("Type in number of characters (between 14 and 256): ");
-        scanf("%i", &characters);
-
-        // Clear input buffer:
-        while ((getchar()) != '\n' && (getchar()) != EOF);
-    } while (characters < 14 || characters > 256);
-
-    // Allocate memory as the number of characters * chars
-    char *password = malloc(characters*sizeof(char));
-    if (password == NULL)
-    {
-        printf("Could not allocate memory for password.\n");
-        free(password); // Just being "super safe"
-        return 1;
-    }
-
-    printf(C_GREEN "Password: ");
-    generate_random_CLI(
-                        CH_TYPE,
-                        password, 
-                        characters);
-
-    copy_to_clipboard_prompt(password);
-    printf("\n");
-
-    free(password);
+    generate_random_CLI(CH_TYPE);
     return 0;
 
 }
