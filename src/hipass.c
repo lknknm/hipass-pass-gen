@@ -57,11 +57,11 @@ int main(int argc, char **argv)
         int this_option_optind = optind ? optind : 1;
         int option_index = 0;
         static struct option long_options[] = {
-            {"help",        no_argument,            0,  'h' },
+            {"help",        no_argument,            0,  'a' },
             {"version",     no_argument,            0,  'v' },
-            {"random",      required_argument,      0,  'r' },
-            {"passphrase",  no_argument,            0,  'p' },
-            {0,         0,                          0,   0  }
+            {"sufix",       required_argument,      0,  's' },
+            {"passphrase",  no_argument,            0,  'P' },
+            {0,             0,                      0,   0  }
         };
 
         c = getopt_long(argc, argv, "abc:d:012",
@@ -70,15 +70,8 @@ int main(int argc, char **argv)
             break;
 
         switch (c) 
-        {
-            case 0:     
-                        printf("option %s\n", long_options[option_index].name);
-                        if (optarg)
-                            printf(" with arg %s", optarg);
-                        printf("\n");
-                        break;
-                        
-            case 'h':   
+        {                       
+            case 'a':   
                         printf(C_WHITE "Hipass Password Generator\n\n");    
                         printf(C_RESET "usage: hipass [--flag] [-f]\n");    
                         printf("*no flags           User will be prompted to choose character length\n");
@@ -107,47 +100,22 @@ int main(int argc, char **argv)
                         printf("hipass version " VERSION " release date " DATE);
                         printf("\n");
                         return 0;
-
-            case 'r':
-                        printf(C_WHITE "Hipass Password Generator\n\n" C_RESET);    
-
-
-                        int characters = 0;
-                        do {
-                            printf("Type in number of characters (between 14 and 256): ");
-                            scanf("%i", &characters);
-
-                            // Clear input buffer:
-                            while ((getchar()) != '\n' && (getchar()) != EOF);
-                        } while (characters < 14 || characters > 256);
-
-                        // Allocate memory as the number of characters * chars
-                        char *password = malloc(characters*sizeof(char));
-                        if (password == NULL)
+            case 's':
+                        printf("option %s\n", long_options[option_index].name);
+                        char *sufix = optarg;
+                        if (sufix)
                         {
-                            printf("Could not allocate memory for password.\n");
-                            free(password); // Just being "super safe"
-                            return 1;
+                            printf("sufix %s", sufix);
+                            printf("\n");
+                            memset(CH_TYPE, 1, 4*sizeof(CH_TYPE[0]));
+                            generate_random_CLI(CH_TYPE, sufix);
                         }
-
-                        printf(C_GREEN "Password: ");
-                        copy_to_clipboard_prompt(password);
                         printf("\n");
-                        free(password);
-                        break;
+                        return 0;
 
-            case 'p':   
+            case 'P':   
                         generate_passphrase();
-                        return;
-
-            case '0':
-            case '1':
-            case '2':
-                if (digit_optind != 0 && digit_optind != this_option_optind)
-                    printf("digits occur in two different argv-elements.\n");
-                digit_optind = this_option_optind;
-                printf("option %c\n", c);
-                break;
+                        return 0;
         }
     }
 
@@ -193,7 +161,8 @@ int main(int argc, char **argv)
             CH_TYPE[3] = true;
         }
     }
-    generate_random_CLI(CH_TYPE);
+    char *sufix = NULL;
+    generate_random_CLI(CH_TYPE, sufix);
     return 0;
 
 }

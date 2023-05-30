@@ -125,7 +125,7 @@ int generate_type(bool CH_TYPE[])
     return char_type;
 }
 
-extern int generate_random_CLI(bool CH_TYPE[])
+extern int generate_random_CLI(bool CH_TYPE[], char *sufix)
 {
     unsigned short seed[3];
     random_seed_bytes(sizeof(seed), seed);
@@ -143,14 +143,20 @@ extern int generate_random_CLI(bool CH_TYPE[])
 
     // Allocate memory as the number of characters * chars
     char *password = malloc(characters*sizeof(char));
+    if (sufix != NULL)
+    {
+        char *password_wsufix = realloc(password, (characters+strnlen(sufix, 256))*sizeof(char));
+        password = password_wsufix;
+    }
+
     if (password == NULL)
     {
         printf("Could not allocate memory for password.\n");
         free(password); // Just being "super safe"
         return 1;
     }
-    printf(C_GREEN "Password: ");
 
+    printf(C_GREEN "Password: ");
     for (int i = 0; i < characters; i++)
     {
         // Selected char_type arguments will be parsed in this recursive function.
@@ -173,11 +179,13 @@ extern int generate_random_CLI(bool CH_TYPE[])
             printf(C_RED "%c", password[i]);
         }
     }
+    if (sufix != NULL)
+        printf(C_CYAN "%s", sufix);
+
     printf("\n");
     copy_to_clipboard_prompt(password);
     printf("\n");
     free(password);
-
     return 0;
 }
 
