@@ -1,4 +1,4 @@
-CFLAGS += -Wall -Wextra -Wshadow
+CFLAGS += -g -fsanitize=undefined,address -Wall -Wextra -Wshadow
 
 sources = $(wildcard src/*.c)
 objects = $(sources:src/%.c=build/%.o)
