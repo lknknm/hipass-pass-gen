@@ -51,6 +51,15 @@ static const enum len {
     NUM_SYMBOLS = sizeof(symbols) - 1
 } types;
 
+char *add_suffix(char *src, const char *suffix) 
+{
+    const int len = sizeof(src);
+    char *tmp = realloc(src, len + sizeof(suffix) + 1);
+    if (!tmp) exit(1);
+    strcpy(tmp + len, suffix);
+    return tmp;
+}
+
 extern int generate_random_complete(void)
 {
     unsigned short seed[3];
@@ -69,7 +78,8 @@ extern int generate_random_complete(void)
     } while (characters < 14 || characters > 256);
 
     // Allocate memory as the number of characters * chars
-    char *password = malloc(characters*sizeof(char));
+    char *password = malloc(sizeof(char[characters]) + 1);
+    password[characters] = '\0';
     if (password == NULL)
     {
         printf("Could not allocate memory for password.\n");
@@ -125,7 +135,7 @@ int generate_type(bool CH_TYPE[])
     return char_type;
 }
 
-extern int generate_random_CLI(bool CH_TYPE[], char *sufix)
+extern int generate_random_CLI(bool CH_TYPE[], char *suffix)
 {
     unsigned short seed[3];
     random_seed_bytes(sizeof(seed), seed);
@@ -142,11 +152,11 @@ extern int generate_random_CLI(bool CH_TYPE[], char *sufix)
     } while (characters < 14 || characters > 256);
 
     // Allocate memory as the number of characters * chars
-    char *password = malloc(characters*sizeof(char));
-    if (sufix != NULL)
+    char *password = malloc(sizeof(char[characters]) + 1);
+    password[characters] = '\0';
+    if (suffix != NULL)
     {
-        char *password_wsufix = realloc(password, (characters+strnlen(sufix, 256))*sizeof(char));
-        password = password_wsufix;
+        password = add_suffix(password, suffix);
     }
 
     if (password == NULL)
@@ -179,8 +189,8 @@ extern int generate_random_CLI(bool CH_TYPE[], char *sufix)
             printf(C_RED "%c", password[i]);
         }
     }
-    if (sufix != NULL)
-        printf(C_CYAN "%s", sufix);
+    if (suffix != NULL)
+        printf(C_CYAN "%s", suffix);
 
     printf("\n");
     copy_to_clipboard_prompt(password);

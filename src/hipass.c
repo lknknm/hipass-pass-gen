@@ -57,21 +57,21 @@ int main(int argc, char **argv)
         int this_option_optind = optind ? optind : 1;
         int option_index = 0;
         static struct option long_options[] = {
-            {"help",        no_argument,            0,  'a' },
+            {"help",        no_argument,            0,  'h' },
             {"version",     no_argument,            0,  'v' },
-            {"sufix",       required_argument,      0,  's' },
-            {"passphrase",  no_argument,            0,  'P' },
+            {"suffix",      required_argument,      0, 's' },
+            {"passphrase",  no_argument,            0,  'p' },
             {0,             0,                      0,   0  }
         };
 
-        c = getopt_long(argc, argv, "abc:d:012",
+        c = getopt_long(argc, argv, "hvs:p",
                     long_options, &option_index);
         if (c == -1)
             break;
 
         switch (c) 
         {                       
-            case 'a':   
+            case 'h':   
                         printf(C_WHITE "Hipass Password Generator\n\n");    
                         printf(C_RESET "usage: hipass [--flag] [-f]\n");    
                         printf("*no flags           User will be prompted to choose character length\n");
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
                         printf(" --update           Update to latest release\n");
                         printf("\n");
                         printf(" --prefix PREFIX    Generate password with a desired prefix\n");
-                        printf(" --sufix SUFIX      Generate password with a desired sufix\n");
+                        printf(" --suffix suffix      Generate password with a desired suffix\n");
                         printf("\n");
                         printf("Refer to README.md in the GitHub Repository for full notes.\n\n");
 
@@ -102,18 +102,18 @@ int main(int argc, char **argv)
                         return 0;
             case 's':
                         printf("option %s\n", long_options[option_index].name);
-                        char *sufix = optarg;
-                        if (sufix)
+                        char *suffix = optarg;
+                        if (suffix)
                         {
-                            printf("sufix %s", sufix);
+                            printf("suffix %s", suffix);
                             printf("\n");
                             memset(CH_TYPE, 1, 4*sizeof(CH_TYPE[0]));
-                            generate_random_CLI(CH_TYPE, sufix);
+                            generate_random_CLI(CH_TYPE, suffix);
                         }
                         printf("\n");
                         return 0;
 
-            case 'P':   
+            case 'p':   
                         generate_passphrase();
                         return 0;
         }
@@ -161,8 +161,8 @@ int main(int argc, char **argv)
             CH_TYPE[3] = true;
         }
     }
-    char *sufix = NULL;
-    generate_random_CLI(CH_TYPE, sufix);
+    char *suffix = NULL;
+    generate_random_CLI(CH_TYPE, suffix);
     return 0;
 
 }
