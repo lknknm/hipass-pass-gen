@@ -1,5 +1,6 @@
 ## Hipass Password Generator
 
+![Hipass password generator](./doc/assets/hipass.png)
 Hipass is a CLI (Command Line Interface) Password Generator that generates random, strong passwords. 
 The intent of the project is to generate passwords in a fast, concise way and copy them directly into the clipboard, without having 
 to rely on internet services.

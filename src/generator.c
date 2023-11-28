@@ -71,7 +71,7 @@ extern int generate_random_complete(void)
     random_seed_bytes(sizeof(seed), seed);
     prng48_seed(seed);
 
-    printf(C_WHITE "Hipass Password Generator\n\n" C_RESET);    
+    printf(C_WHITE "▘▗ Hipass Password Generator\n\n" C_RESET);    
 
     int characters = 0;
     do 
