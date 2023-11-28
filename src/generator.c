@@ -26,7 +26,8 @@
 #include "randseed.h"
 #include "prng48.h"
 
-// output constants
+//----------------------------------------------------------------------------
+// Output constants to color values:
 #define C_CLEAR  "\033[2J\033[1;1H"
 #define C_RESET  "\e[m"
 #define C_GREEN  "\e[32m"
@@ -38,19 +39,22 @@
 #define C_BOLD   "\e[1m"
 #define C_BWHITE "\e[47m"
 
+//----------------------------------------------------------------------------
 // Global variables declaration:
 static const char digits[] = "0123456789";
 static const char lowercase[] = "abcdefghijklmnopqrstuvwxyz";
 static const char uppercase[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 static const char symbols[] = "!@#^&*$";
 
-static const enum len {
+static const enum len 
+{
     NUM_DIGITS = sizeof(digits) - 1,
     NUM_LOWERCASE = sizeof(lowercase) - 1,
     NUM_UPPERCASE = sizeof(uppercase) - 1,
     NUM_SYMBOLS = sizeof(symbols) - 1
 } types;
 
+//----------------------------------------------------------------------------
 char *add_suffix(char *src, const char *suffix) 
 {
     const int len = sizeof(src);
@@ -60,6 +64,7 @@ char *add_suffix(char *src, const char *suffix)
     return tmp;
 }
 
+//----------------------------------------------------------------------------
 extern int generate_random_complete(void)
 {
     unsigned short seed[3];
@@ -69,7 +74,8 @@ extern int generate_random_complete(void)
     printf(C_WHITE "Hipass Password Generator\n\n" C_RESET);    
 
     int characters = 0;
-    do {
+    do 
+    {
         printf("Type in number of characters (between 14 and 256): ");
         scanf("%i", &characters);
 
@@ -94,19 +100,23 @@ extern int generate_random_complete(void)
         // Silly modulo bitwise operation
         int char_type = prng48_rand(0, 0xABCDE) & (sizeof(types) - 1); 
         
-        if (char_type == 0) {
+        if (char_type == 0) 
+        {
             password[i] = digits[prng48_rand(0, 0xABCDE) % NUM_DIGITS];
             printf(C_BLUE "%c", password[i]);
         }
-        else if (char_type == 1) {
+        else if (char_type == 1) 
+        {
             password[i] = lowercase[prng48_rand(0, 0xABCDE) % NUM_LOWERCASE];
             printf(C_WHITE "%c", password[i]);
         }
-        else if (char_type == 2) {
+        else if (char_type == 2) 
+        {
             password[i] = uppercase[prng48_rand(0, 0xABCDE) % NUM_UPPERCASE];
             printf(C_WHITE "%c", password[i]);
         }
-        else if (char_type == 3) {
+        else if (char_type == 3) 
+        {
             password[i] = symbols[prng48_rand(0, 0xABCDE) % NUM_SYMBOLS];
             printf(C_RED "%c", password[i]);
         }
@@ -119,13 +129,12 @@ extern int generate_random_complete(void)
     return 0;
 }
 
+//----------------------------------------------------------------------------
+// Recursive function will generate a random number between 
+// the 4 available character types. 
+// If a character type was not selected within arguments, generate random number again. 
 int generate_type(bool CH_TYPE[])
 {
-    /**
-      * Recursive function will generate a random number between 
-      * the 4 available character types. 
-      * If a character type was not selected within arguments, generate random number again. 
-      */
     unsigned short seed[3];
     random_seed_bytes(sizeof(seed), seed);
     prng48_seed(seed);
@@ -135,6 +144,7 @@ int generate_type(bool CH_TYPE[])
     return char_type;
 }
 
+//----------------------------------------------------------------------------
 extern int generate_random_CLI(bool CH_TYPE[], char *suffix)
 {
     unsigned short seed[3];
@@ -143,7 +153,8 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix)
 
     printf(C_WHITE "Hipass Password Generator\n\n" C_RESET);    
     int characters = 0;
-    do {
+    do 
+    {
         printf("Type in number of characters (between 14 and 256): ");
         scanf("%i", &characters);
 
@@ -172,19 +183,23 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix)
         // Selected char_type arguments will be parsed in this recursive function.
         int char_type = generate_type(CH_TYPE);
         
-        if (char_type == 0) {
+        if (char_type == 0) 
+        {
             password[i] = digits[prng48_rand(0, 0xABCDE) % NUM_DIGITS];
             printf(C_BLUE "%c", password[i]);
         }
-        else if (char_type == 1) {
+        else if (char_type == 1) 
+        {
             password[i] = lowercase[prng48_rand(0, 0xABCDE) % NUM_LOWERCASE];
             printf(C_WHITE "%c", password[i]);
         }
-        else if (char_type == 2) {
+        else if (char_type == 2) 
+        {
             password[i] = uppercase[prng48_rand(0, 0xABCDE) % NUM_UPPERCASE];
             printf(C_WHITE "%c", password[i]);
         }
-        else if (char_type == 3) {
+        else if (char_type == 3) 
+        {
             password[i] = symbols[prng48_rand(0, 0xABCDE) % NUM_SYMBOLS];
             printf(C_RED "%c", password[i]);
         }
@@ -199,6 +214,8 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix)
     return 0;
 }
 
+//----------------------------------------------------------------------------
+// Passphrase generator wip.
 extern void generate_passphrase(void)
 {
     printf("hello world!\n");

@@ -32,34 +32,11 @@ You can use offline or online solutions for that. My top 3 recommendations are:
 Of course they also offer robust password generators, but if you want an offline, fast solution, you can recursively use 
 <a href="https://github.com/lknknm/hipass-pass-gen">Hipass</a>.
 
-### How to build Hipass
-Hipass is available to build on Linux Ubuntu or using Windows Subsystem for Linux (WSL).
-#### Download the Source
-```
-sudo wget https://github.com/lknknm/hipass-pass-gen/archive/refs/heads/main.zip
-unzip hipass-pass-gen-main.zip
-rm hipass-pass-gen-main.zip
-cd hipass-pass-gen-main
-```
-#### Compile the code using Makefile
-Hipass uses a Makefile to compile the code. The following commands can be executed from the root directory.
-```
-make          # Build Hipass
-make all      # Build Hipass with all object files
-make clean    # Clean ./build directory
-make test     # Build and run test
-```
-By default the Makefile will output object files and binary into the `~/build` folder. You can then run the program from there:
-```
-cd ~/build
-./hipass
-```
-Additionally, if you are on Linux, you may need to install xclip to get the password copied into the clipboard, if you haven't yet.
-```
-sudo apt-get -y install xclip
-```
+### Documentation
+- To see how to build the project, please take a look at the developer documentation and follow the [Build Manual](./doc/dev/BUILD.md). 
+- To see how we style our code, please refer to the [Code Style Guide](./doc/dev/STYLEGUIDE.md)
 
-#### Usage (to be implemented)
+### Usage (to be implemented)
 ```
   ./hipass [--flag] [f]
 ```
@@ -89,7 +66,7 @@ The following arguments can be passed as flags:
          -sep%      Separate words with "%"
 ```
 
-#### Generating random characters
+### Generating random characters
 Generating random characters and random numbers based on a seed of time such as `srand(time(NULL))` and `rand()` may lead to several password exploits. A simple example of this is that seeding a `random` generator with `time(NULL)` and calling `generate_password` twice in `main()` will generate the same password twice. This means that seeding with `time(NULL)` will not generate milisecond time and will not use any kernel processes of the user's computer (adding solely GETPID in the equation won't help much either). 
 
 For this reason, this password generator is using [this set of functions written](https://github.com/jleffler/soq/tree/6118083dc6af1daa0a0f0f54d6414f2f6c0e9049/src/so-7594-6155) by [Jonathan Leffler](https://github.com/jleffler). His random seed generation uses the widespread `/dev/random` and `/dev/urandom` devices as a [cryptographically secure pseudorandom number generator](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator).
@@ -102,5 +79,5 @@ For this reason, this password generator is using [this set of functions written
 
 >Leffler, Jonathan, Stack Overflow Question 75494-6155, (2023), GitHub repository, https://github.com/jleffler/soq/tree/6118083dc6af1daa0a0f0f54d6414f2f6c0e9049/src/so-7594-6155
 
-#### License
+### License
 This project uses GNU GENERAL PUBLIC LICENSE 3.0.

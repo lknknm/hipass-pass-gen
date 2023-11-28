@@ -24,11 +24,13 @@
 #include "generator.h"
 #include "clipboard.h"
 
-// metadata
+//----------------------------------------------------------------------------
+// Metadata:
 #define VERSION "0.1.0"
 #define DATE "may 15th 2023"
 
-// output constants
+//----------------------------------------------------------------------------
+// Output constants to color values:
 #define C_CLEAR  "\033[2J\033[1;1H"
 #define C_RESET  "\e[m"
 #define C_GREEN  "\e[32m"
@@ -47,6 +49,8 @@
  */
 bool CH_TYPE[4] = { 0, 0, 0, 0 };
 
+//----------------------------------------------------------------------------
+// Program entrypoint
 int main(int argc, char **argv)
 {
     int c;
@@ -59,7 +63,7 @@ int main(int argc, char **argv)
         static struct option long_options[] = {
             {"help",        no_argument,            0,  'h' },
             {"version",     no_argument,            0,  'v' },
-            {"suffix",      required_argument,      0, 's' },
+            {"suffix",      required_argument,      0,  's' },
             {"passphrase",  no_argument,            0,  'p' },
             {0,             0,                      0,   0  }
         };

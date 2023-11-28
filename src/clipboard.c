@@ -1,3 +1,17 @@
+/**
+ * Hipass CLI Password Generator
+ * Developed as Final Project for 
+ * Harvard's CS50x Introduction to Computer Science
+ * 
+ * Author: @lknknm
+ *  Date: 04 may 2023
+ *  Version: 0.1.0
+ *
+ * Contributors:
+ *  @FuelledByCoffee
+ * 
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -7,7 +21,8 @@
 
 #define MIN_STRING 32
 
-// output constants
+//----------------------------------------------------------------------------
+// Output constants to color values:
 #define C_CLEAR  "\033[2J\033[1;1H"
 #define C_RESET  "\e[m"
 #define C_GREEN  "\e[32m"
@@ -19,7 +34,7 @@
 #define C_BOLD   "\e[1m"
 #define C_BWHITE "\e[47m"
 
-
+//----------------------------------------------------------------------------
 int copy_to_clipboard(const char *str)
 {
     const char *proto_cmd = "echo '%s' | xclip -sel clipboard";
@@ -29,6 +44,7 @@ int copy_to_clipboard(const char *str)
     return system(cmd);
 }
 
+//----------------------------------------------------------------------------
 void copy_to_clipboard_prompt(const char *str)
 {
     int clipPrompt;
