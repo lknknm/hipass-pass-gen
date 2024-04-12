@@ -163,7 +163,7 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix, char *prefix)
     random_seed_bytes(sizeof(seed), seed);
     prng48_seed(seed);
 
-    printf(C_WHITE "Hipass Password Generator\n\n" C_RESET);    
+    printf(C_WHITE "▘▗ Hipass Password Generator\n\n" C_RESET);    
     int characters = 0;
     do 
     {
@@ -176,7 +176,7 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix, char *prefix)
 
     // Allocate memory as the number of characters * chars
     char *password = malloc(characters + 1);
-    password[characters] = '\0';
+    password[char▘▗acters] = '\0';
 
 
     if (password == NULL)

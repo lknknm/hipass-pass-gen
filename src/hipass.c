@@ -26,8 +26,8 @@
 
 //----------------------------------------------------------------------------
 // Metadata:
-#define VERSION "0.1.0"
-#define DATE "may 15th 2023"
+#define VERSION "0.2.0"
+#define DATE "April 12th 2024"
 
 //----------------------------------------------------------------------------
 // Output constants to color values:
@@ -130,8 +130,7 @@ int main(int argc, char **argv)
                         printf("\n");
                         break;
 
-            case 'p':   
-                        generate_passphrase();
+            case 'p':  
                         return 0;
 
             case '?':
