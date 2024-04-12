@@ -1,4 +1,5 @@
 CFLAGS += -g -fsanitize=undefined,address -Wall -Wextra -Wshadow
+DEST_DIR ?= /usr/local/bin
 
 sources = $(wildcard src/*.c)
 objects = $(sources:src/%.c=build/%.o)
@@ -23,3 +24,6 @@ $(prog): $(objects)
 build/%.o: src/%.c
 	@mkdir -p build
 	$(COMPILE.c) $< -o $@
+
+install: $(prog)
+	mv $< $(DEST_DIR)
