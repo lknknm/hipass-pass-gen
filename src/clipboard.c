@@ -12,6 +12,8 @@
  * 
  */
 
+#include <stdbool.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -35,13 +37,66 @@
 #define C_BWHITE "\e[47m"
 
 //----------------------------------------------------------------------------
+bool can_run_command(const char *cmd) 
+{
+    if(strchr(cmd, '/')) 
+    {
+        // if cmd includes a slash, no path search must be performed,
+        // go straight to checking if it's executable
+        return access(cmd, X_OK)==0;
+    }
+    const char *path = getenv("PATH");
+    if(!path) return false; // something is horribly wrong...
+    // we are sure we won't need a buffer any longer
+    char *buf = malloc(strlen(path)+strlen(cmd)+3);
+    if(!buf) return false; // actually useless, see comment
+    // loop as long as we have stuff to examine in path
+    for(; *path; ++path) 
+    {
+        // start from the beginning of the buffer
+        char *p = buf;
+        // copy in buf the current path element
+        for(; *path && *path!=':'; ++path,++p) {
+            *p = *path;
+        }
+        // empty path entries are treated like "."
+        if(p==buf) *p++='.';
+        // slash and command name
+        if(p[-1]!='/') *p++='/';
+        strcpy(p, cmd);
+        // check if we can execute it
+        if(access(buf, X_OK)==0) {
+            free(buf);
+            return true;
+        }
+        // quit at last cycle
+        if(!*path) break;
+    }
+    // not found
+    free(buf);
+    return false;
+}
+
+
+//----------------------------------------------------------------------------
 int copy_to_clipboard(const char *str)
 {
-    const char *proto_cmd = "echo '%s' | xclip -sel clipboard";
-    char cmd[strlen(str) + strlen(proto_cmd) - 1];
-    sprintf(cmd, proto_cmd, str);
-    printf(C_GREEN "Password copied to clipboard.\n\n" C_RESET);
-    return system(cmd);
+    const char       *tool         = NULL;
+    const char *const clip_tools[] = {"clip.exe", // windows
+                                      "pbcopy",   // mac
+                                      "xclip"};
+    if (can_run_command(clip_tools[0]))
+        tool = clip_tools[0];
+    else if (can_run_command(clip_tools[1]))
+        tool = clip_tools[1];
+    else if (can_run_command(clip_tools[2]))
+        tool = "xclip -sel clipboard";
+
+    const char *proto_cmd = "echo '%s' | %s"; 
+    char cmd[strlen(str) + strlen(proto_cmd) + strlen(tool) - 1];
+    sprintf(cmd, proto_cmd, str, tool);
+    printf(C_GREEN "Password copied to clipboard.\n" C_RESET);
+    return system(cmd); 
 }
 
 //----------------------------------------------------------------------------

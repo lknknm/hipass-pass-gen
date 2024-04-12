@@ -55,6 +55,8 @@ int main(int argc, char **argv)
 {
     int c;
     int digit_optind = 0;
+    char *prefix = NULL;
+    char *suffix = NULL;
 
     while (1)
     {
@@ -63,12 +65,13 @@ int main(int argc, char **argv)
         static struct option long_options[] = {
             {"help",        no_argument,            0,  'h' },
             {"version",     no_argument,            0,  'v' },
-            {"suffix",      required_argument,      0,  's' },
+            {"suffix",      required_argument,      0,  '1' },
+            {"prefix",      required_argument,      0,  '2' },
             {"passphrase",  no_argument,            0,  'p' },
             {0,             0,                      0,   0  }
         };
 
-        c = getopt_long(argc, argv, "hvs:p",
+        c = getopt_long(argc, argv, "hv:p:12",
                     long_options, &option_index);
         if (c == -1)
             break;
@@ -104,22 +107,36 @@ int main(int argc, char **argv)
                         printf("hipass version " VERSION " release date " DATE);
                         printf("\n");
                         return 0;
-            case 's':
+            case '1':
                         printf("option %s\n", long_options[option_index].name);
-                        char *suffix = optarg;
+                        suffix = optarg;
                         if (suffix)
                         {
                             printf("suffix %s", suffix);
                             printf("\n");
-                            memset(CH_TYPE, 1, 4*sizeof(CH_TYPE[0]));
-                            generate_random_CLI(CH_TYPE, suffix);
+                            //memset(CH_TYPE, 1, 4*sizeof(CH_TYPE[0]));
                         }
                         printf("\n");
-                        return 0;
+                        continue;
+
+            case '2':
+                        printf("option %s\n", long_options[option_index].name);
+                        prefix = optarg;
+                        if (prefix)
+                        {
+                            printf("prefix %s", prefix);
+                            printf("\n");
+                        }
+                        printf("\n");
+                        break;
 
             case 'p':   
                         generate_passphrase();
                         return 0;
+
+            case '?':
+                printf("Option not available please prompt Hipass again\n");
+                return 0;
         }
     }
 
@@ -146,6 +163,7 @@ int main(int argc, char **argv)
      *  Arguments can be input in any order. 
      */
 
+    memset(CH_TYPE, 1, 4*sizeof(CH_TYPE[0]));
     for (int i = 1; i < argc; i++)
     {
         if (strncmp("num", argv[i], 3) == 0) {
@@ -165,8 +183,7 @@ int main(int argc, char **argv)
             CH_TYPE[3] = true;
         }
     }
-    char *suffix = NULL;
-    generate_random_CLI(CH_TYPE, suffix);
+    generate_random_CLI(CH_TYPE, suffix, prefix);
     return 0;
 
 }

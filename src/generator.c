@@ -57,10 +57,22 @@ static const enum len
 //----------------------------------------------------------------------------
 char *add_suffix(char *src, const char *suffix) 
 {
-    const int len = sizeof(src);
-    char *tmp = realloc(src, len + sizeof(suffix) + 1);
+    const int len = strlen(src);
+    char *tmp = realloc(src, len + strlen(suffix) + 1);
     if (!tmp) exit(1);
     strcpy(tmp + len, suffix);
+    return tmp;
+}
+
+//----------------------------------------------------------------------------
+char *add_prefix(char *src, const char *prefix) 
+{
+    const int len = strlen(src);
+    char *tmp = malloc(len + strlen(prefix) + 1);
+    if (!tmp) exit(1);
+    strcpy(tmp, prefix);
+    strcat(tmp, src);
+    free(src);
     return tmp;
 }
 
@@ -145,7 +157,7 @@ int generate_type(bool CH_TYPE[])
 }
 
 //----------------------------------------------------------------------------
-extern int generate_random_CLI(bool CH_TYPE[], char *suffix)
+extern int generate_random_CLI(bool CH_TYPE[], char *suffix, char *prefix)
 {
     unsigned short seed[3];
     random_seed_bytes(sizeof(seed), seed);
@@ -163,12 +175,9 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix)
     } while (characters < 14 || characters > 256);
 
     // Allocate memory as the number of characters * chars
-    char *password = malloc(sizeof(char[characters]) + 1);
+    char *password = malloc(characters + 1);
     password[characters] = '\0';
-    if (suffix != NULL)
-    {
-        password = add_suffix(password, suffix);
-    }
+
 
     if (password == NULL)
     {
@@ -178,6 +187,8 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix)
     }
 
     printf(C_GREEN "Password: ");
+    if (prefix != NULL)
+        printf(C_CYAN "%s", prefix);
     for (int i = 0; i < characters; i++)
     {
         // Selected char_type arguments will be parsed in this recursive function.
@@ -205,18 +216,16 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix)
         }
     }
     if (suffix != NULL)
+    {
+        password = add_suffix(password, suffix); 
         printf(C_CYAN "%s", suffix);
+    }
+    if (prefix != NULL)
+        password = add_prefix(password, prefix);
 
     printf("\n");
     copy_to_clipboard_prompt(password);
     printf("\n");
     free(password);
     return 0;
-}
-
-//----------------------------------------------------------------------------
-// Passphrase generator wip.
-extern void generate_passphrase(void)
-{
-    printf("hello world!\n");
 }

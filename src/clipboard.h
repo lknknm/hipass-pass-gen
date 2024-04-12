@@ -2,6 +2,7 @@
 #define CLIPBOARD_H
 
 // Definition to copy to clipboard on cmd.
+bool can_run_command(const char *cmd);
 int copy_to_clipboard(const char *str);
 void copy_to_clipboard_prompt(const char *str);
 
