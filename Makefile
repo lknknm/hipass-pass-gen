@@ -1,5 +1,5 @@
 CFLAGS += -g -fsanitize=undefined,address -Wall -Wextra -Wshadow
-DEST_DIR ?= /usr/local/bin
+DEST_DIR ?= /usr/local
 
 sources = $(wildcard src/*.c)
 objects = $(sources:src/%.c=build/%.o)
@@ -25,5 +25,10 @@ build/%.o: src/%.c
 	@mkdir -p build
 	$(COMPILE.c) $< -o $@
 
+.PHONY: install
 install: $(prog)
-	mv $< $(DEST_DIR)
+	cp $< $(DEST_DIR)/bin/$(notdir $<)
+
+.PHONY: unisntall
+uninstall:
+	rm -f $(DEST_DIR)/bin/$(notdir $(prog))
