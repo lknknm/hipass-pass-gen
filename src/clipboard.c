@@ -4,8 +4,8 @@
  * Harvard's CS50x Introduction to Computer Science
  * 
  * Author: @lknknm
- *  Date: 04 may 2023
- *  Version: 0.1.0
+ *  Date: April 2024
+ *  Version: 0.2.0
  *
  * Contributors:
  *  @FuelledByCoffee
@@ -37,6 +37,10 @@
 #define C_BWHITE "\e[47m"
 
 //----------------------------------------------------------------------------
+// This function is used to detect which platform Hipass is running on, so in this
+// way it can be platform agnostic between Windows, MacOS and Linux.
+// This function is originally from a Stack Overflow answer, more information in the link below.
+// https://stackoverflow.com/questions/41230547/check-if-program-is-installed-in-c
 bool can_run_command(const char *cmd) 
 {
     if(strchr(cmd, '/')) 
@@ -79,6 +83,8 @@ bool can_run_command(const char *cmd)
 
 
 //----------------------------------------------------------------------------
+// Function used to copy the password to the clipboard. 
+// It uses the can_run_command bool function to check which platform Hipass is running on.
 int copy_to_clipboard(const char *str)
 {
     const char       *tool         = NULL;

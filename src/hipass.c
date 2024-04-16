@@ -6,8 +6,8 @@
  * This is the main file for Hipass Password Generator.
  *
  * Author: @lknknm
- *  Date: 04 may 2023
- *  Version: 0.1.0
+ *  Date: April 2024
+ *  Version: 0.2.0
  *
  * Contributors:
  *  @FuelledByCoffee
@@ -148,7 +148,9 @@ int main(int argc, char **argv)
 
     if (argc == 1) 
     {
-        generate_random_complete();
+        for (int i = 0; i < 4; i++)
+            CH_TYPE[i] = 1;
+        generate_random_CLI(CH_TYPE, NULL, NULL);
         return 0;
     }
 
@@ -184,5 +186,4 @@ int main(int argc, char **argv)
     }
     generate_random_CLI(CH_TYPE, suffix, prefix);
     return 0;
-
 }
