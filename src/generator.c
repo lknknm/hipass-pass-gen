@@ -4,8 +4,8 @@
  * Harvard's CS50x Introduction to Computer Science
  * 
  * Author: @lknknm
- *  Date: 04 may 2023
- *  Version: 0.1.0
+ *  Date: April 2024
+ *  Version: 0.2.0
  *
  * Contributors:
  *  @FuelledByCoffee
@@ -77,71 +77,6 @@ char *add_prefix(char *src, const char *prefix)
 }
 
 //----------------------------------------------------------------------------
-extern int generate_random_complete(void)
-{
-    unsigned short seed[3];
-    random_seed_bytes(sizeof(seed), seed);
-    prng48_seed(seed);
-
-    printf(C_WHITE "▘▗ Hipass Password Generator\n\n" C_RESET);    
-
-    int characters = 0;
-    do 
-    {
-        printf("Type in number of characters (between 14 and 256): ");
-        scanf("%i", &characters);
-
-        // Clear input buffer:
-        while ((getchar()) != '\n' && (getchar()) != EOF);
-    } while (characters < 14 || characters > 256);
-
-    // Allocate memory as the number of characters * chars
-    char *password = malloc(sizeof(char[characters]) + 1);
-    password[characters] = '\0';
-    if (password == NULL)
-    {
-        printf("Could not allocate memory for password.\n");
-        free(password); // Just being "super safe"
-        return 1;
-    }
-
-    printf(C_GREEN "Password: ");
-    for (int i = 0; i < characters; i++)
-    {
-        // sizeof(types) will return the size of an int, which is 4 bytes.
-        // Silly modulo bitwise operation
-        int char_type = prng48_rand(0, 0xABCDE) & (sizeof(types) - 1); 
-        
-        if (char_type == 0) 
-        {
-            password[i] = digits[prng48_rand(0, 0xABCDE) % NUM_DIGITS];
-            printf(C_BLUE "%c", password[i]);
-        }
-        else if (char_type == 1) 
-        {
-            password[i] = lowercase[prng48_rand(0, 0xABCDE) % NUM_LOWERCASE];
-            printf(C_WHITE "%c", password[i]);
-        }
-        else if (char_type == 2) 
-        {
-            password[i] = uppercase[prng48_rand(0, 0xABCDE) % NUM_UPPERCASE];
-            printf(C_WHITE "%c", password[i]);
-        }
-        else if (char_type == 3) 
-        {
-            password[i] = symbols[prng48_rand(0, 0xABCDE) % NUM_SYMBOLS];
-            printf(C_RED "%c", password[i]);
-        }
-    }
-    
-    printf("\n");
-    copy_to_clipboard_prompt(password);
-    printf("\n");
-    free(password);
-    return 0;
-}
-
-//----------------------------------------------------------------------------
 // Recursive function will generate a random number between 
 // the 4 available character types. 
 // If a character type was not selected within arguments, generate random number again. 
@@ -157,6 +92,9 @@ int generate_type(bool CH_TYPE[])
 }
 
 //----------------------------------------------------------------------------
+// This is the main function behind the random characters password generation.
+// It uses the set of functions from the Jonathan Leffler library in order to generate
+// true random numbers and convert them to the character preferences input by users.
 extern int generate_random_CLI(bool CH_TYPE[], char *suffix, char *prefix)
 {
     unsigned short seed[3];
@@ -176,7 +114,7 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix, char *prefix)
 
     // Allocate memory as the number of characters * chars
     char *password = malloc(characters + 1);
-    password[char▘▗acters] = '\0';
+    password[characters] = '\0';
 
 
     if (password == NULL)
