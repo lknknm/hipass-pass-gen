@@ -13,6 +13,7 @@
  * 
  */
 
+#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -20,11 +21,7 @@
 
 #include "generator.h"
 #include "clipboard.h"
-
-#include "posixver.h"
-#include <assert.h>
-#include "randseed.h"
-#include "prng48.h"
+#include "rand.h"
 
 //----------------------------------------------------------------------------
 // Output constants to color values:
@@ -41,18 +38,7 @@
 
 //----------------------------------------------------------------------------
 // Global variables declaration:
-static const char digits[] = "0123456789";
-static const char lowercase[] = "abcdefghijklmnopqrstuvwxyz";
-static const char uppercase[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 static const char symbols[] = "!@#^&*$";
-
-static const enum len 
-{
-    NUM_DIGITS = sizeof(digits) - 1,
-    NUM_LOWERCASE = sizeof(lowercase) - 1,
-    NUM_UPPERCASE = sizeof(uppercase) - 1,
-    NUM_SYMBOLS = sizeof(symbols) - 1
-} types;
 
 //----------------------------------------------------------------------------
 char *add_suffix(char *src, const char *suffix) 
@@ -82,10 +68,7 @@ char *add_prefix(char *src, const char *prefix)
 // If a character type was not selected within arguments, generate random number again. 
 int generate_type(bool CH_TYPE[])
 {
-    unsigned short seed[3];
-    random_seed_bytes(sizeof(seed), seed);
-    prng48_seed(seed);
-    int char_type = prng48_rand(0, 0xABCDE) & (sizeof(types) - 1); 
+    int char_type = random_nr(0, 3); 
     if (CH_TYPE[char_type] == false)
         return generate_type(CH_TYPE);
     return char_type;
@@ -97,10 +80,6 @@ int generate_type(bool CH_TYPE[])
 // true random numbers and convert them to the character preferences input by users.
 extern int generate_random_CLI(bool CH_TYPE[], char *suffix, char *prefix)
 {
-    unsigned short seed[3];
-    random_seed_bytes(sizeof(seed), seed);
-    prng48_seed(seed);
-
     printf(C_WHITE "▘▗ Hipass Password Generator\n\n" C_RESET);    
     int characters = 0;
     do 
@@ -129,28 +108,34 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix, char *prefix)
         printf(C_CYAN "%s", prefix);
     for (int i = 0; i < characters; i++)
     {
+        enum {
+            DIGIT,
+            LOWER,
+            UPPER,
+            SYMBOL
+        };
         // Selected char_type arguments will be parsed in this recursive function.
         int char_type = generate_type(CH_TYPE);
         
-        if (char_type == 0) 
-        {
-            password[i] = digits[prng48_rand(0, 0xABCDE) % NUM_DIGITS];
+        switch (char_type) {
+        case DIGIT:
+            password[i] = random_nr('0', '9');
             printf(C_BLUE "%c", password[i]);
-        }
-        else if (char_type == 1) 
-        {
-            password[i] = lowercase[prng48_rand(0, 0xABCDE) % NUM_LOWERCASE];
+            break;
+        case LOWER:
+            password[i] = random_nr('a', 'z');
             printf(C_WHITE "%c", password[i]);
-        }
-        else if (char_type == 2) 
-        {
-            password[i] = uppercase[prng48_rand(0, 0xABCDE) % NUM_UPPERCASE];
+            break;
+        
+        
+        case UPPER:
+            password[i] = random_nr('A', 'Z');
             printf(C_WHITE "%c", password[i]);
-        }
-        else if (char_type == 3) 
-        {
-            password[i] = symbols[prng48_rand(0, 0xABCDE) % NUM_SYMBOLS];
+            break;
+        case SYMBOL:
+            password[i] = symbols[random_nr(0, sizeof symbols - 1)];
             printf(C_RED "%c", password[i]);
+            break;
         }
     }
     if (suffix != NULL)

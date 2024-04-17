@@ -1,8 +1,9 @@
 CFLAGS += -g -fsanitize=undefined,address -Wall -Wextra -Wshadow
+CXXFLAGS += $(CFLAGS) -std=c++17
 DEST_DIR ?= /usr/local
 
-sources = $(wildcard src/*.c)
-objects = $(sources:src/%.c=build/%.o)
+sources = $(wildcard src/*.c src/*.cpp)
+objects = $(sources:src/%=build/%.o)
 
 prog = build/hipass
 
@@ -19,11 +20,15 @@ clean:
 	rm -f $(prog)
 
 $(prog): $(objects)
-	$(LINK.c) $^ -o $@ $(LDLIBS)
+	$(LINK.cc) $^ -o $@ $(LDLIBS)
 
-build/%.o: src/%.c
+build/%.c.o: src/%.c
 	@mkdir -p build
 	$(COMPILE.c) $< -o $@
+
+build/%.cpp.o: src/%.cpp
+	@mkdir -p build
+	$(COMPILE.cc) $< -o $@
 
 .PHONY: install
 install: $(prog)
