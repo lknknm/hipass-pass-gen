@@ -129,7 +129,7 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix, char *prefix)
             printf(C_WHITE "%c", password[i]);
             break;
         case SYMBOL:
-            password[i] = symbols[random_nr(0, sizeof symbols - 1)];
+            password[i] = symbols[random_nr(0, sizeof symbols - 2)];
             printf(C_RED "%c", password[i]);
             break;
         }
