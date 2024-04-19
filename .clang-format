@@ -1,0 +1,29 @@
+Language:      Cpp
+BasedOnStyle:  LLVM
+
+# align
+AlignAfterOpenBracket: Align
+AlignConsecutiveMacros: Consecutive
+AlignArrayOfStructures: Left
+AlignConsecutiveAssignments:
+  Enabled: true
+  PadOperators: true
+  AcrossEmptyLines: false
+AlignConsecutiveDeclarations: AcrossComments
+AlignOperands:   AlignAfterOperator
+AlignTrailingComments: true
+
+AllowAllArgumentsOnNextLine: true
+
+# braces on next line
+BreakBeforeBraces: Allman
+
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+AllowShortLambdasOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
+
+ColumnLimit: 80
