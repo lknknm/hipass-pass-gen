@@ -1,7 +1,5 @@
 /**
  * Hipass CLI Password Generator
- * Developed as Final Project for 
- * Harvard's CS50x Introduction to Computer Science
  * 
  * Author: @lknknm
  *  Date: April 2024
@@ -84,17 +82,16 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix, char *prefix)
     int characters = 0;
     do 
     {
-        printf("Type in number of characters (between 14 and 256): ");
+        printf("Type in number of characters (between 14 and 1024): ");
         scanf("%i", &characters);
 
         // Clear input buffer:
         while ((getchar()) != '\n' && (getchar()) != EOF);
-    } while (characters < 14 || characters > 256);
+    } while (characters < 14 || characters > 1024);
 
     // Allocate memory as the number of characters * chars
     char *password = malloc(characters + 1);
     password[characters] = '\0';
-
 
     if (password == NULL)
     {
@@ -117,7 +114,8 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix, char *prefix)
         // Selected char_type arguments will be parsed in this recursive function.
         int char_type = generate_type(CH_TYPE);
         
-        switch (char_type) {
+        switch (char_type) 
+        {
         case DIGIT:
             password[i] = random_nr('0', '9');
             printf(C_BLUE "%c", password[i]);
@@ -126,8 +124,6 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix, char *prefix)
             password[i] = random_nr('a', 'z');
             printf(C_WHITE "%c", password[i]);
             break;
-        
-        
         case UPPER:
             password[i] = random_nr('A', 'Z');
             printf(C_WHITE "%c", password[i]);

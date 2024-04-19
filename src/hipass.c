@@ -1,7 +1,5 @@
 /**
  * Hipass CLI Password Generator
- * Developed as Final Project for 
- * Harvard's CS50x Introduction to Computer Science
  * 
  * This is the main file for Hipass Password Generator.
  *
@@ -164,7 +162,7 @@ int main(int argc, char **argv)
      *  Arguments can be input in any order. 
      */
 
-    memset(CH_TYPE, 1, 4*sizeof(CH_TYPE[0]));
+    memset(CH_TYPE, 0, 4*sizeof(CH_TYPE[0]));
     for (int i = 1; i < argc; i++)
     {
         if (strncmp("num", argv[i], 3) == 0) {
@@ -184,6 +182,8 @@ int main(int argc, char **argv)
             CH_TYPE[3] = true;
         }
     }
+    for (int i = 0; i < 4; i++)
+        printf("CHAR TYPES = %i\n", CH_TYPE[i]);
     generate_random_CLI(CH_TYPE, suffix, prefix);
     return 0;
 }
