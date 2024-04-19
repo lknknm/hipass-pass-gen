@@ -1,4 +1,5 @@
 CFLAGS += -g -fsanitize=undefined,address -Wall -Wextra -Wshadow
+CPPFLAGS += -isystem extern/include
 CXXFLAGS += $(CFLAGS) -std=c++17
 DEST_DIR ?= /usr/local
 
