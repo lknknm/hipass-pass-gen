@@ -1,9 +1,11 @@
 CFLAGS += -g -fsanitize=undefined,address -Wall -Wextra -Wshadow
 CXXFLAGS += $(CFLAGS) -std=c++17
 DEST_DIR ?= /usr/local
+MAN_DIR ?= share/man/man1
 
 sources = $(wildcard src/*.c src/*.cpp)
 objects = $(sources:src/%=build/%.o)
+manuals = $(wildcard docs/*.1.gz)
 
 prog = build/hipass
 
@@ -33,6 +35,7 @@ build/%.cpp.o: src/%.cpp
 .PHONY: install
 install: $(prog)
 	cp $< $(DEST_DIR)/bin/$(notdir $<)
+	cp -R $(manuals) $(DEST_DIR)/$(MAN_DIR)
 
 .PHONY: unisntall
 uninstall:
