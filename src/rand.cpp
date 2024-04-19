@@ -1,6 +1,6 @@
 #include <random>
 #include "rand.h"
-#include "lib/randutils.hpp"
+#include "randutils.hpp"
 
 extern "C" 
 {
