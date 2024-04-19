@@ -1,7 +1,5 @@
 /**
  * Hipass CLI Password Generator
- * Developed as Final Project for 
- * Harvard's CS50x Introduction to Computer Science
  * 
  * Author: @lknknm
  *  Date: April 2024

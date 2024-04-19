@@ -5,9 +5,6 @@ Hipass is a CLI (Command Line Interface) Password Generator that generates rando
 The intent of the project is to generate passwords in a fast, concise way and copy them directly into the clipboard, without having 
 to rely on internet services.
 
-| CS50x Final Project. This is still under development.  |
-|--------------------------------------------------------|
-
 #### Why use a password generator?
 Passwords must be strong and unique to each service you're using. This way, attackers will have a harder time guessing your passwords, or even 
 <a href="https://www.fortinet.com/resources/cyberglossary/brute-force-attack">"brute forcing"</a> 
