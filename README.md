@@ -26,7 +26,7 @@ With that, it's possible to generate password that would take at least a century
 Password managers, period. Also, it's recommended that you keep a very strong password for that too, with a separate e-mail to login.
 Usually a 2FA is also recommended for "further improvement on security", but for a password manager this is pratically mandatory for obvious reasons. 
 You can use offline or online solutions for that. My top 3 recommendations are: 
-<a href="https://bitwarden.com/">BitWarden</a>, <a href="https://usa.kaspersky.com/about/company">Kaspersky</a> and <a href="https://www.lastpass.com/pt">LastPass</a>. 
+<a href="https://bitwarden.com/">BitWarden</a>, <a href="https://usa.kaspersky.com/about/company">Kaspersky</a> and <a href="https://proton.me/pass">Proton Pass</a>.
 Of course they also offer robust password generators, but if you want an offline, fast solution, you can recursively use 
 <a href="https://github.com/lknknm/hipass-pass-gen">Hipass</a>.
 
@@ -59,9 +59,6 @@ The following arguments can be passed as flags:
        
   --prefix PREFIX   Generate password with a desired prefix
   --sufix SUFIX     Generate password with a desired sufix
-       
-  --passphrase      Generate passphrase with the following flags
-         -sep%      Separate words with "%"
 ```
 
 ### Generating random characters
