@@ -47,6 +47,7 @@
  * numeric digits, az-lowercase, AZ-uppercase, symbols;
  */
 bool CH_TYPE[4] = { 0, 0, 0, 0 };
+bool no_type = 0;
 
 //----------------------------------------------------------------------------
 // Program entrypoint
@@ -94,11 +95,10 @@ int main(int argc, char **argv)
                         printf("\n");
                         printf(" -h --help           Print out help text\n");
                         printf(" -v --version        Print version\n");
-                        printf(" --update            Update to latest release\n");
                         printf("\n");
-                        printf(" --prefix PREFIX     Generate password with a desired prefix\n");
-                        printf(" --suffix suffix     Generate password with a desired suffix\n");
-                        printf(" --passphrase sep    Generate passphrase with a desired char separator and a random number in the end\n");
+                        printf(" --prefix PREFIX        Generate password with a desired prefix\n");
+                        printf(" --suffix suffix        Generate password with a desired suffix\n");
+                        printf(" -p --passphrase sep    Generate passphrase with a desired char separator and a random number in the end\n");
                         printf("\n");
                         printf("Refer to README.md in the GitHub Repository for full notes.\n\n");
 
@@ -121,7 +121,7 @@ int main(int argc, char **argv)
 
             case '2':
                         printf("option %s\n", long_options[option_index].name);
-                        prefix = optarg;
+                        prefix = optarg; 
                         if (prefix)
                         {
                             printf("prefix %s", prefix);
@@ -132,7 +132,7 @@ int main(int argc, char **argv)
 
             case 'p':  
                         separator = optarg;
-                        generate_passphrase(separator);
+                        generate_passphrase(*separator);
                         return 0;
 
             case '?':
@@ -147,11 +147,9 @@ int main(int argc, char **argv)
      *  a random password including
      *  A-Z uppercase + a-z lowercase + symbols (!@#^&*$) + 0-9 numeric
      */
-
     if (argc == 1) 
     {
-        for (int i = 0; i < 4; i++)
-            CH_TYPE[i] = 1;
+        memset(CH_TYPE, 1, 4*sizeof(CH_TYPE[0]));
         generate_random_CLI(CH_TYPE, NULL, NULL);
         return 0;
     }
@@ -165,8 +163,6 @@ int main(int argc, char **argv)
      *  sym to add symbol (!@#^&*$) characters;
      *  Arguments can be input in any order. 
      */
-
-    memset(CH_TYPE, 0, 4*sizeof(CH_TYPE[0]));
     for (int i = 1; i < argc; i++)
     {
         if (strncmp("num", argv[i], 3) == 0) {
@@ -186,8 +182,8 @@ int main(int argc, char **argv)
             CH_TYPE[3] = true;
         }
     }
-    for (int i = 0; i < 4; i++)
-        printf("CHAR TYPES = %i\n", CH_TYPE[i]);
+    for (int i = 0; i < 4; i++) { if (CH_TYPE[i] == 1) { no_type = 0; break; } no_type = 1; }
+    if (no_type == 1) { memset(CH_TYPE, 1, 4*sizeof(CH_TYPE[0])); }
     generate_random_CLI(CH_TYPE, suffix, prefix);
     return 0;
 }

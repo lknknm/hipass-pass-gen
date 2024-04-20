@@ -37,11 +37,11 @@ extern "C"
 	//----------------------------------------------------------------------------
 	// Picks random words from the ud2 dictionary to output it into a string.
 	// ud2.txt is a uniquely decodable list, based on Google Ngram data and Niceware v. 4.0 list made by sts10.
-	int random_wordpicker(uint wordcount, char *separator)
+	int random_wordpicker(uint wordcount, char separator)
 	{
 		std::vector<std::string> word;
 		std::string password;
-		std::string sep{*separator};
+		std::string sep{separator};
 		std::string number = std::to_string(random_nr(0, 0xABC));
 		std::ifstream file("dictionaries/ud2.txt");
 
@@ -68,7 +68,7 @@ extern "C"
 		// This will output different colors for separators and words for better user visibility.
 		for (long unsigned int i = 0; i < password.length(); i++)
 		{
-			if (password[i] == *separator)
+			if (password[i] == separator)
 				std::cout << C_RED << password[i] << C_RESET;
 			else if (isdigit(password.at(i)))
 				std::cout << C_CYAN << password[i] << C_RESET;
