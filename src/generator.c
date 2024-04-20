@@ -17,8 +17,8 @@
 #include <string.h>
 #include <stdbool.h>
 
-#include "generator.h"
 #include "clipboard.h"
+#include "generator.h"
 #include "rand.h"
 
 //----------------------------------------------------------------------------
@@ -147,4 +147,22 @@ extern int generate_random_CLI(bool CH_TYPE[], char *suffix, char *prefix)
     printf("\n");
     free(password);
     return 0;
+}
+
+//----------------------------------------------------------------------------
+extern void generate_passphrase(char *separator)
+{
+    printf(C_WHITE "▘▗ " C_CYAN "Hipass Password Generator\n\n" C_RESET);     
+    uint word_count = 0;
+    printf(C_RED "Separator %c\n",*separator);
+    printf(C_RESET);
+    do 
+    {
+        printf("Type in number of words (between 3 and 20): ");
+        scanf("%i", &word_count);
+
+        // Clear input buffer:
+        while ((getchar()) != '\n' && (getchar()) != EOF);
+    } while (word_count < 3 || word_count > 20);
+    random_wordpicker(word_count, separator);
 }

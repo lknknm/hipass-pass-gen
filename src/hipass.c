@@ -19,6 +19,7 @@
 #include <stdbool.h>
 #include <getopt.h>
 
+#include "rand.h"
 #include "generator.h"
 #include "clipboard.h"
 
@@ -55,6 +56,7 @@ int main(int argc, char **argv)
     int digit_optind = 0;
     char *prefix = NULL;
     char *suffix = NULL;
+    char *separator = NULL;
 
     while (1)
     {
@@ -65,7 +67,7 @@ int main(int argc, char **argv)
             {"version",     no_argument,            0,  'v' },
             {"suffix",      required_argument,      0,  '1' },
             {"prefix",      required_argument,      0,  '2' },
-            {"passphrase",  no_argument,            0,  'p' },
+            {"passphrase",  required_argument,      0,  'p' },
             {0,             0,                      0,   0  }
         };
 
@@ -90,12 +92,13 @@ int main(int argc, char **argv)
                         printf("    sym              Include special symbols\n");
                         printf("    num              Include digits from 0 to 9\n");
                         printf("\n");
-                        printf(" -h --help          Print out help text\n");
-                        printf(" -v --version       Print version\n");
-                        printf(" --update           Update to latest release\n");
+                        printf(" -h --help           Print out help text\n");
+                        printf(" -v --version        Print version\n");
+                        printf(" --update            Update to latest release\n");
                         printf("\n");
-                        printf(" --prefix PREFIX    Generate password with a desired prefix\n");
-                        printf(" --suffix suffix      Generate password with a desired suffix\n");
+                        printf(" --prefix PREFIX     Generate password with a desired prefix\n");
+                        printf(" --suffix suffix     Generate password with a desired suffix\n");
+                        printf(" --passphrase sep    Generate passphrase with a desired char separator and a random number in the end\n");
                         printf("\n");
                         printf("Refer to README.md in the GitHub Repository for full notes.\n\n");
 
@@ -112,7 +115,6 @@ int main(int argc, char **argv)
                         {
                             printf("suffix %s", suffix);
                             printf("\n");
-                            //memset(CH_TYPE, 1, 4*sizeof(CH_TYPE[0]));
                         }
                         printf("\n");
                         continue;
@@ -129,6 +131,8 @@ int main(int argc, char **argv)
                         break;
 
             case 'p':  
+                        separator = optarg;
+                        generate_passphrase(separator);
                         return 0;
 
             case '?':
@@ -166,19 +170,19 @@ int main(int argc, char **argv)
     for (int i = 1; i < argc; i++)
     {
         if (strncmp("num", argv[i], 3) == 0) {
-            printf("option num\n");
+            printf("include num\n");
             CH_TYPE[0] = true;
         }
         else if (strncmp("az", argv[i], 2) == 0) {
-            printf("option az_lower\n");
+            printf("include az_lower\n");
             CH_TYPE[1] = true;
         }
         else if (strncmp("AZ", argv[i], 2) == 0) {
-            printf("option AZ\n");
+            printf("include AZ\n");
             CH_TYPE[2] = true;
         }
         else if (strncmp("sym", argv[i], 2) == 0) {
-            printf("option !#_symbols\n");
+            printf("include !#_symbols\n");
             CH_TYPE[3] = true;
         }
     }
