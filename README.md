@@ -55,25 +55,74 @@ The following arguments can be passed as flags:
 
   --h --help        Print out help text
   --v --version     Print version
-  --update          Update to latest release
        
-  --prefix PREFIX   Generate password with a desired prefix
-  --sufix SUFIX     Generate password with a desired sufix
-  --passphrase sep  Generate passphrase with a desired char separator and a random number in the end
+  --prefix PREFIX      Generate password with a desired prefix
+  --sufix SUFIX        Generate password with a desired sufix
+  -p --passphrase sep  Generate passphrase with a desired char separator and a random number in the end
 ```
 
 ### Generating random characters
-Generating random characters and random numbers based on a seed of time such as `srand(time(NULL))` and `rand()` may lead to several password exploits. A simple example of this is that seeding a `random` generator with `time(NULL)` and calling `generate_password` twice in `main()` will generate the same password twice. This means that seeding with `time(NULL)` will not generate milisecond time and will not use any kernel processes of the user's computer (adding solely GETPID in the equation won't help much either). 
+Generating random characters and random numbers based on a seed of time such as `srand(time(NULL))` and `rand()` may lead to several password exploits. A simple example of this is that seeding a `random` generator with `time(NULL)` and calling `generate_password` twice in `main()` will generate the same password twice. This means that seeding with `time(NULL)` will not generate milisecond time and will not use any kernel processes of the user's computer (adding solely GETPID in the equation won't help much either). Writing random number generators with specific design is a non-trivial task, being not only an exercise, but also a huge research topic on its own.
 
-For this reason, this password generator is using [this set of functions written](https://github.com/jleffler/soq/tree/6118083dc6af1daa0a0f0f54d6414f2f6c0e9049/src/so-7594-6155) by [Jonathan Leffler](https://github.com/jleffler). His random seed generation uses the widespread `/dev/random` and `/dev/urandom` devices as a [cryptographically secure pseudorandom number generator](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator).
+Initially, this password generator was using [this set of functions written](https://github.com/jleffler/soq/tree/6118083dc6af1daa0a0f0f54d6414f2f6c0e9049/src/so-7594-6155) by [Jonathan Leffler](https://github.com/jleffler). His random seed generation uses the widespread `/dev/random` and `/dev/urandom` devices as a [cryptographically secure pseudorandom number generator](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator) with `rand48` seeding.
 
->"The random seed code generation code in `randseed.c` and `randseed.h` uses `/dev/random` by default but can be configured to use a number of other algorithms. The files `crc.c` and `crc.h` contain some CRC algorithms if your system has neither `/dev/random` (nor `/dev/urandom`) nor `arc4random()`.
->
->The random number generation code using POSIX nrand48() is in prng48.c and prng48.h. You should call prng48_seed() with an array of 3 unsigned short integers that represent the random seed - though there is a default value. You then call prng48_rand() with the lower and upper bounds of the range of 31-bit unsigned integers that you want. The algorithm takes care to ensure that there is no bias in the result.
->
->The files kludge.c, kludge.h, posixver.h, stderr.c, and stderr.h can be found in the src/libsoq sub-directory. They are needed for the FEATURE macro used in randseed.c and testing, etc."
+Although this solution was satisfactory enough for the scope of this project, C++ has more variety of random seed generation algorithms to choose from and consequently algorithms that have more bits of entropy and better uniform distributions, such as the mt19937. The stock `device` from the C++'s random library is known for not having the need of being non-deterministic (i.e. being truly random in runtime, as opposed from compile time, meaning it could generate the same number in every run for some systems). For these reasons, this password generator uses the `randutils.hpp` C++ random number generator API by Melissa E. O'Neill, carefully explained in [her blog, pcg-random.org](https://www.pcg-random.org/posts/simple-portable-cpp-seed-entropy.html)
 
->Leffler, Jonathan, Stack Overflow Question 75494-6155, (2023), GitHub repository, https://github.com/jleffler/soq/tree/6118083dc6af1daa0a0f0f54d6414f2f6c0e9049/src/so-7594-6155
+The random number generator is defined in the `rand.cpp` file, integrated with the C code via the C++ ABI (Application Binary Interface), called by the `generator.c` file:
+```cpp
+rand.cpp:
+extern "C" 
+{
+	#include "clipboard.h"
+	//----------------------------------------------------------------------------
+	// Random number generator that implements the randutils auto_seed_256 seed engine.
+	// More information on the seed engine in
+    // https://www.pcg-random.org/posts/simple-portable-cpp-seed-entropy.html
+	int random_nr(int min, int max) 
+	{
+		std::uniform_int_distribution dist{min, max};
+		static std::mt19937           engine{randutils::auto_seed_256{}.base()};
+		return dist(engine);
+	}
+}
+```
+
+- Further reading: https://www.pcg-random.org/
+
+### Generating random passphrases
+Generating passphrases is a great feature for password generators because they are hard enough for computers to guess (given it hass a significant amount of entropy), but easy for humans to remember or write. Passphrases are usually a set of "non-sensical" or "barely-sensical" words attached together by separators with the bonus of having a number somewhere.
+
+To feed the "randomness" aspect of a passphrase, there are many wordlist dictionaries such as [the EFF wordlist](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases) that contain rare words, nonsensical words and unusual names. Each word is picked using the diceware, meaning one can roll a dice six times to pick a random word from the list.
+
+As imaginable, coming up with a wordlist is also a topic of study on its own, given wordlists usually include 7,000 to 40,000 words each, and may have different rulesets to make words possible to remember and yet difficult to crack. 
+
+
+This passphrase generator uses the `sts10's ud2.txt wordlist`, "a [uniquely decodable list](https://github.com/sts10/generated-wordlists?tab=readme-ov-file#what-does-it-mean-if-a-list-is-uniquely-decodable), based on Google Ngram data and Niceware v. 4.0 list. It is free of some common homophones and British spellings of certain words". It was selected for this project because it has 40,000 uniquely decodable words, creating 15.288 bits of entropy per word. 
+
+- Further reading:  
+  - information on how to make a wordlist in [this post from sts10](https://sts10.github.io/2020/09/30/making-a-word-list.html).
+  - sts10 methodology on wordlist generation [here](https://github.com/sts10/generated-wordlists).
+
+Since this project is now using the C++ ABI, generating and allocating memory for a passphrase — in order to copy it to the clipboard — is easier than doing it manually in C, given we now have the `std::string` class to work with, therefore using the `append(str)` function to keep appending words and separators into the string and pass it as a `const char* password` to the clipboard.
+
+```cpp
+		// Select words from the dictionary using the random_nr(min, max) function and append to string.
+		for (uint i = 0; i < wordcount; i++)
+		{
+			password.append(word[random_nr(0, 0xABCDEF) % word.size()]);
+			password.append(sep);
+		}
+		password.append(number);
+    ...
+		copy_to_clipboard_prompt(password.c_str());
+```
+
+Further on, randomizing the selected wordlist dictionary for each word used in the passphrase generation could also make it more efficient against dictionary brute force attacks. This could be achieved by making a dictionaries index list and randomizing the index to select which dictionary will be loaded to pick a random word from. It is definately an insteresting exercise to understand if this would give more entropy for passphrase generation.
+
+### Conclusion
+Making an efficient random password/passphrase generator is not a very trivial task as it might seem if you care for security and true random number generators. Achieving true randomness to pick characters or words in a list is a difficult task that can be a topic of extensive research to understand different methods and behaviors for unpredictability, specially for password generation.
+
+Hopefully, understanding such methods can be very beneficial in order to comprehend different tasks and applications they might be used, such as simulation and statistics. For the scope of this project I was only able to scratch the surface in this huge topic, but researching different libraries of PRNG and studying their intricacies was a very enriching experience.
 
 ### License
 This project uses GNU GENERAL PUBLIC LICENSE 3.0.
