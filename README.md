@@ -66,7 +66,7 @@ Generating random characters and random numbers based on a seed of time such as 
 
 Initially, this password generator was using [this set of functions written](https://github.com/jleffler/soq/tree/6118083dc6af1daa0a0f0f54d6414f2f6c0e9049/src/so-7594-6155) by [Jonathan Leffler](https://github.com/jleffler). His random seed generation uses the widespread `/dev/random` and `/dev/urandom` devices as a [cryptographically secure pseudorandom number generator](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator) with `rand48` seeding.
 
-Although this solution was satisfactory enough for the scope of this project, C++ has more variety of random seed generation algorithms to choose from and consequently algorithms that have more bits of entropy and better uniform distributions, such as the mt19937. The stock `device` from the C++'s random library is known for not having the need of being non-deterministic (i.e. being truly random in runtime, as opposed from compile time, meaning it could generate the same number in every run for some systems). For these reasons, this password generator uses the `randutils.hpp` C++ random number generator API by Melissa E. O'Neill, carefully explained in [her blog, pcg-random.org](https://www.pcg-random.org/posts/simple-portable-cpp-seed-entropy.html)
+Although this solution was satisfactory enough for the scope of this project, C++ has more variety of random seed generation algorithms to choose from and consequently algorithms that have more bits of entropy and better uniform distributions, such as the mt19937. The stock `device` from the C++'s random library is known for not having the need of being non-deterministic (i.e. being truly random in runtime, as opposed from compile time, meaning it could generate the same number in every run for some systems). For the aforementioned reasons, this password generator uses the `randutils.hpp` C++ random number generator API by Melissa E. O'Neill, carefully explained in [her blog, pcg-random.org](https://www.pcg-random.org/posts/simple-portable-cpp-seed-entropy.html)
 
 The random number generator is defined in the `rand.cpp` file, integrated with the C code via the C++ ABI (Application Binary Interface), called by the `generator.c` file:
 ```cpp
@@ -74,10 +74,10 @@ rand.cpp:
 extern "C" 
 {
 	#include "clipboard.h"
-	//----------------------------------------------------------------------------
-	// Random number generator that implements the randutils auto_seed_256 seed engine.
-	// More information on the seed engine in
-    // https://www.pcg-random.org/posts/simple-portable-cpp-seed-entropy.html
+  //----------------------------------------------------------------------------
+  // Random number generator that implements the randutils auto_seed_256 seed engine.
+  // More information on the seed engine in
+  // https://www.pcg-random.org/posts/simple-portable-cpp-seed-entropy.html
 	int random_nr(int min, int max) 
 	{
 		std::uniform_int_distribution dist{min, max};
