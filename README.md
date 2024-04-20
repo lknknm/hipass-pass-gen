@@ -59,6 +59,7 @@ The following arguments can be passed as flags:
        
   --prefix PREFIX   Generate password with a desired prefix
   --sufix SUFIX     Generate password with a desired sufix
+  --passphrase sep  Generate passphrase with a desired char separator and a random number in the end
 ```
 
 ### Generating random characters
