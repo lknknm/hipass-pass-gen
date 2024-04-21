@@ -68,12 +68,10 @@ extern "C"
 		// This will output different colors for separators and words for better user visibility.
 		for (char c : password)
 		{
-    range-for
-			std::cout << (c == *separator ? C_RED
+			std::cout << (c == separator ? C_RED
 					: isdigit(c)    ? C_CYAN
 					: C_WHITE)
 				<< c << C_RESET;
-
 		}
 
 		std::cout << std::endl;
