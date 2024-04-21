@@ -133,7 +133,7 @@ Since this project is now using the C++ ABI, generating and allocating memory fo
 		copy_to_clipboard_prompt(password.c_str());
 ```
 
-Further on, randomizing the selected wordlist dictionary for each word used in the passphrase generation could also make it more efficient against dictionary brute force attacks. This could be achieved by making a dictionaries index list and randomizing the index to select which dictionary will be loaded to pick a random word from. It is definately an insteresting exercise to understand if this would give more entropy for passphrase generation.
+Further on, randomizing the selected wordlist dictionary for each word used in the passphrase generation could also make it more efficient against dictionary brute force attacks. This could be achieved by making a dictionaries index list and randomizing the index to select which dictionary will be loaded to pick a random word from. It is definately an insteresting exercise to understand if this would give more entropy for passphrase generation. Additionally, mixing wordlist dictionaries with fictional words dictionaries, such as [randomly generated made-up words](https://www.thisworddoesnotexist.com/) can have a potential benefit in helping even further to avoid the aforementioned dictionary brute-force attacks.
 
 ### Conclusion
 Making an efficient random password/passphrase generator is not a very trivial task as it might seem if you care for security and true random number generators. Achieving true randomness to pick characters or words in a list is a difficult task that can be a topic of extensive research to understand different methods and behaviors for unpredictability, specially for password generation.
