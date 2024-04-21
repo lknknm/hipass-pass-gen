@@ -34,7 +34,7 @@ Of course they also offer robust password generators, but if you want an offline
 - To see how to build the project, please take a look at the developer documentation and follow the [Build Manual](./doc/dev/BUILD.md). 
 - To see how we style our code, please refer to the [Code Style Guide](./doc/dev/STYLEGUIDE.md)
 
-### Usage (to be implemented)
+### Usage
 ```
   ./hipass [--flag] [f]
 ```
