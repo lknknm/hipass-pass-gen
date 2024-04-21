@@ -66,14 +66,12 @@ extern "C"
 		password.append(number);
 
 		// This will output different colors for separators and words for better user visibility.
-		for (long unsigned int i = 0; i < password.length(); i++)
+		for (char c : password)
 		{
-			if (password[i] == *separator)
-				std::cout << C_RED << password[i] << C_RESET;
-			else if (isdigit(password.at(i)))
-				std::cout << C_CYAN << password[i] << C_RESET;
-			else
-				std::cout << C_WHITE << password[i];
+			std::cout << (c == *separator ? C_RED
+					: isdigit(c)    ? C_CYAN
+					: C_WHITE)
+				<< c << C_RESET;
 		}
 
 		std::cout << std::endl;
