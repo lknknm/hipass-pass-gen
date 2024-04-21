@@ -98,7 +98,7 @@ int main(int argc, char **argv)
                         printf("\n");
                         printf(" --prefix PREFIX        Generate password with a desired prefix\n");
                         printf(" --suffix suffix        Generate password with a desired suffix\n");
-                        printf(" -p --passphrase sep    Generate passphrase with a desired char separator and a random number in the end\n");
+                        printf(" -p --passphrase \'sep\'    Generate passphrase with a desired char separator and a random number in the end\n");
                         printf("\n");
                         printf("Refer to README.md in the GitHub Repository for full notes.\n\n");
 
