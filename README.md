@@ -61,6 +61,22 @@ The following arguments can be passed as flags:
   -p --passphrase 'sep'  Generate passphrase with a desired char separator and a random number in the end
 ```
 
+#### For example:
+```
+hipass --passphrase '-'
+```
+Can output:
+```
+▘▗ Hipass Password Generator
+
+Separator -
+Type in number of words (between 3 and 20): 5
+rollback-toothpicks-snowstorms-mercury-ledger-866
+
+Do you want to copy the password to the clipboard? (y/n): y
+Password copied to clipboard.
+```
+
 ### Generating random characters
 Generating random characters and random numbers based on a seed of time such as `srand(time(NULL))` and `rand()` may lead to several password exploits. A simple example of this is that seeding a `random` generator with `time(NULL)` and calling `generate_password` twice in `main()` will generate the same password twice. This means that seeding with `time(NULL)` will not generate milisecond time and will not use any kernel processes of the user's computer (adding solely GETPID in the equation won't help much either). Writing random number generators with specific design is a non-trivial task, being not only an exercise, but also a huge research topic on its own.
 
