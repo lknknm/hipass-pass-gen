@@ -87,19 +87,15 @@ Although this solution was satisfactory enough for the scope of this project, C+
 The random number generator is defined in the `rand.cpp` file, integrated with the C code via the C++ ABI (Application Binary Interface), called by the `generator.c` file:
 ```cpp
 rand.cpp:
-extern "C" 
+//----------------------------------------------------------------------------
+// Random number generator that implements the randutils auto_seed_256 seed engine.
+// More information on the seed engine in
+// https://www.pcg-random.org/posts/simple-portable-cpp-seed-entropy.html
+int random_nr(int min, int max) 
 {
-	#include "clipboard.h"
-    	//----------------------------------------------------------------------------
-    	// Random number generator that implements the randutils auto_seed_256 seed engine.
-    	// More information on the seed engine in
-   	// https://www.pcg-random.org/posts/simple-portable-cpp-seed-entropy.html
-	int random_nr(int min, int max) 
-	{
-		std::uniform_int_distribution dist{min, max};
-		static std::mt19937           engine{randutils::auto_seed_256{}.base()};
-		return dist(engine);
-	}
+	std::uniform_int_distribution dist{min, max};
+	static std::mt19937           engine{randutils::auto_seed_256{}.base()};
+	return dist(engine);
 }
 ```
 
@@ -122,15 +118,15 @@ This passphrase generator uses the `sts10's ud2.txt wordlist`, "a [uniquely deco
 Since this project is now using the C++ ABI, generating and allocating memory for a passphrase — in order to copy it to the clipboard — is easier than doing it manually in C, given we now have the `std::string` class to work with, therefore using the `append(str)` function to keep appending words and separators into the string and pass it as a `const char* password` to the clipboard.
 
 ```cpp
-		// Select words from the dictionary using the random_nr(min, max) function and append to string.
-		for (uint i = 0; i < wordcount; i++)
-		{
-			password.append(word[random_nr(0, 0xABCDEF) % word.size()]);
-			password.append(sep);
-		}
-		password.append(number);
-    ...
-		copy_to_clipboard_prompt(password.c_str());
+// Select words from the dictionary using the random_nr(min, max) function and append to string.
+for (uint i = 0; i < wordcount; i++)
+{
+	password.append(word[random_nr(0, 0xABCDEF) % word.size()]);
+	password.append(sep);
+}
+password.append(number);
+...
+copy_to_clipboard_prompt(password.c_str());
 ```
 
 Further on, randomizing the selected wordlist dictionary for each word used in the passphrase generation could also make it more efficient against dictionary brute force attacks. This could be achieved by making a dictionaries index list and randomizing the index to select which dictionary will be loaded to pick a random word from. It is definately an insteresting exercise to understand if this would give more entropy for passphrase generation. Additionally, mixing wordlist dictionaries with fictional words dictionaries, such as [randomly generated made-up words](https://www.thisworddoesnotexist.com/) can have a potential benefit in helping even further to avoid the aforementioned dictionary brute-force attacks.
